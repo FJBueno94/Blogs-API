@@ -11,10 +11,8 @@ const login = async (email, password) => {
   const result = await User.findOne({ 
     attributes: { email, password },
     where: { email },
-    logging: console.log,
     raw: true,
   });
-  console.log(result, 'service');
   if (!result || result.password !== password) {
     return null;
   }
@@ -22,6 +20,17 @@ const login = async (email, password) => {
   return token;
 };
 
+const createLogin = async (email, password, displayName, image) => {
+  const verifyUser = await User.findOne({ where: { email } });
+  if (verifyUser) {
+    return null;
+  }
+  await User.create({ email, password, displayName, image });
+  const token = tokenHelper.createToken({ email, password });
+  return token;
+};
+
 module.exports = {
   login,
+  createLogin,
 };
