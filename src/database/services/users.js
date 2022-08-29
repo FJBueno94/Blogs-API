@@ -6,7 +6,6 @@ const login = async (email, password) => {
   const payload = { 
     email,
     password,
-    admin: false,
    };
   const result = await User.findOne({ 
     attributes: { email, password },
@@ -21,7 +20,10 @@ const login = async (email, password) => {
 };
 
 const createLogin = async (email, password, displayName, image) => {
-  const verifyUser = await User.findOne({ where: { email } });
+  const verifyUser = await User.findOne({
+    where: { email },
+    raw: true,
+  });
   if (verifyUser) {
     return null;
   }
@@ -30,7 +32,16 @@ const createLogin = async (email, password, displayName, image) => {
   return token;
 };
 
+const getUser = async () => {
+  const result = await User.findAll({
+    attributes: { exclude: ['password'] },
+    raw: true,
+  });
+  return result;
+};
+
 module.exports = {
   login,
   createLogin,
+  getUser,
 };
