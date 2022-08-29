@@ -32,7 +32,7 @@ const createLogin = async (email, password, displayName, image) => {
   return token;
 };
 
-const getUser = async () => {
+const getAllUsers = async () => {
   const result = await User.findAll({
     attributes: { exclude: ['password'] },
     raw: true,
@@ -40,8 +40,23 @@ const getUser = async () => {
   return result;
 };
 
+const getUser = async (id) => {
+  const result = await User.findByPk(
+    id,
+    {
+      attributes: { exclude: ['password'] },
+      raw: true,
+    },
+  );
+  if (!result) {
+    return null;
+  }
+  return result;
+};
+
 module.exports = {
   login,
   createLogin,
+  getAllUsers,
   getUser,
 };

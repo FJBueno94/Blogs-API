@@ -18,13 +18,23 @@ const createLogin = async (req, res) => {
   return res.status(201).json({ token: result });
 };
 
+const getAllUsers = async (req, res) => {
+  const result = await userService.getAllUsers(req.user);
+  return res.status(200).json(result);
+};
+
 const getUser = async (req, res) => {
-  const result = await userService.getUser(req.user);
+  const { id } = req.params;
+  const result = await userService.getUser(id);
+  if (!result) {
+    return res.status(404).json({ message: 'User does not exist' });
+  }
   return res.status(200).json(result);
 };
 
 module.exports = {
   login,
   createLogin,
+  getAllUsers,
   getUser,
 };
