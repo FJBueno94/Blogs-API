@@ -43,7 +43,23 @@ const createLoginValidation = (req, res, next) => {
   next();
 };
 
+const createCategorySchema = joi.object({
+  name: joi.string().required().messages(
+    { 'string.empty': '"name" is required' },
+  ),
+});
+
+const createCategoryValidation = (req, res, next) => {
+  const { name } = req.body;
+  const { error } = createCategorySchema.validate({ name });
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
+  next();
+};
+
 module.exports = {
   loginValidation,
   createLoginValidation,
+  createCategoryValidation,
 };
