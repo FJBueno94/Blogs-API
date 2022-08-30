@@ -10,5 +10,6 @@ router.post('/categories',
   validation.createCategoryValidation,
   tokenValidation,
   categoryController.createCategory);
+router.get('/categories', tokenValidation, categoryController.getCategories);
 
 module.exports = router;
