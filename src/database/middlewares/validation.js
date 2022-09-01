@@ -1,4 +1,5 @@
 const joi = require('joi');
+const { Category } = require('../models');
 
 const loginSchema = joi.object({
   email: joi.string().required().messages(
@@ -34,7 +35,6 @@ const createLoginSchema = joi.object({
 });
 
 const createLoginValidation = (req, res, next) => {
-  console.log('validation'); 
   const { displayName, email, password, image } = req.body;
   const { error } = createLoginSchema.validate({ displayName, email, password, image });
   if (error) {
@@ -58,8 +58,41 @@ const createCategoryValidation = (req, res, next) => {
   next();
 };
 
+const createPostSchema = joi.object({
+  title: joi.string().required(),
+  content: joi.string().required(),
+  categoryIds: joi.array().items(joi.number()).required(),
+});
+
+const createPostValidation = (req, res, next) => {
+  const { title, content, categoryIds } = req.body;
+  const { error } = createPostSchema.validate({ title, content, categoryIds });
+  if (error) {
+    return res.status(400).json({ message: 'Some required fields are missing' });
+  }
+  next();
+};
+
+const validCategory = async (req, res, next) => {
+  const { categoryIds } = req.body;
+  const categories = [];
+  await Promise.all(categoryIds.map(async (category) => {
+    const findCategory = await Category.findOne({ where: { id: category } });
+    if (!findCategory) {
+      return categories.push(category);
+    }
+    return true;
+  }));
+  if (categories.length > 0) {
+    return res.status(400).json({ message: '"categoryIds" not found' });
+  }
+  next();
+};
+
 module.exports = {
   loginValidation,
   createLoginValidation,
   createCategoryValidation,
+  createPostValidation,
+  validCategory,
 };

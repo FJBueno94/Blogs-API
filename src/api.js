@@ -7,5 +7,6 @@ app.use(express.json());
 
 app.use(router.userRouter);
 app.use(router.categoryRouter);
+app.use(router.postRouter);
 
 module.exports = app;
