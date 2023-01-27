@@ -24,7 +24,7 @@ const createLoginSchema = joi.object({
     { 'string.min': '"displayName" length must be at least 8 characters long' },
   ),
   email: joi.string().email().required().messages(
-    { 'strin.email': '"email" must be a valid email' },
+    { 'string.email': '"email" must be a valid email' },
   ),
   password: joi.string().min(6).required().messages(
     { 'string.min': '"password" length must be at least 6 characters long' },

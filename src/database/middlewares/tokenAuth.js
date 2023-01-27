@@ -8,7 +8,6 @@ const tokenValidation = (req, res, next) => {
   try {
     const dataToken = tokenHelper.verifyToken(authorization);
     req.email = dataToken.email;
-    console.log(req.email);
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Expired or invalid token' });
